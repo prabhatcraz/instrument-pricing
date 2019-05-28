@@ -1,10 +1,14 @@
 package com.prabhat.instrument.price.instrument.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.prabhat.instrument.price.instrument.broker.ConsumerMessage;
+import com.prabhat.instrument.price.instrument.broker.MessageBroker;
 import com.prabhat.instrument.price.instrument.producer.ProducerInstrument;
 import com.prabhat.instrument.price.instrument.storage.Instrument;
 import com.prabhat.instrument.price.instrument.storage.InstrumentPriceStorage;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -19,10 +23,12 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class Consumer {
     private final ConsumerConfig consumerConfig;
     private final ObjectMapper objectMapper;
     private final InstrumentPriceStorage instrumentPriceStorage;
+    private final MessageBroker messageBroker;
 
     public void consumeData(final ConsumerMessage consumerMessage) {
         final ExecutorService executor = Executors.newFixedThreadPool(1);
@@ -71,12 +77,16 @@ public class Consumer {
             for (final File file : files) {
                 if (filesDone.get(file.getName()) != Boolean.TRUE) {
                     final ProducerInstrument producerInstrument = objectMapper.readValue(file, ProducerInstrument.class);
-                    filesDone.put(file.getName(), Boolean.TRUE);
                     consumerMessageList.add(this.toInstrument(producerInstrument));
+                    filesDone.put(file.getName(), Boolean.TRUE);
                 }
             }
+
+            System.out.println("files completed " + filesCompleted);
+            // At this point, we are sure that the producer has completed the batch.
             filesCompleted += files.length;
         }
+        System.out.println("All data consumed");
 
         consumerMessageList.forEach(instrumentPriceStorage::addPrice);
     }
@@ -87,5 +97,20 @@ public class Consumer {
                 .asOf(producerInstrument.getAsOf())
                 .price(producerInstrument.getPrice())
                 .build();
+    }
+
+    @Scheduled(fixedDelay = 50)
+    public void checkMessage() {
+        try {
+            System.out.println("fetching message.");
+            final ConsumerMessage message = messageBroker.get();
+            if(message != null) {
+                System.out.println("message received, consuming now.");
+                consumeData(message);
+            }
+
+        } catch (Exception e) {
+            log.error("Problem encountered while retrieving message from broker. {}", e.getMessage());
+        }
     }
 }

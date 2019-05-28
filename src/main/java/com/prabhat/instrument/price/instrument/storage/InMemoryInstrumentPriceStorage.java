@@ -1,13 +1,12 @@
 package com.prabhat.instrument.price.instrument.storage;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.stream.Collectors;
 
-@Component
 public class InMemoryInstrumentPriceStorage implements InstrumentPriceStorage {
   private final Map<String, PriorityQueue<Instrument>> instrumentMap = new HashMap<>();
 
@@ -32,5 +31,12 @@ public class InMemoryInstrumentPriceStorage implements InstrumentPriceStorage {
     final PriorityQueue<Instrument> instrumentPrices = instrumentMap.computeIfAbsent(instrument.getId(),
             i -> new PriorityQueue<>(Comparator.comparingLong(Instrument::getAsOf)));
     instrumentPrices.add(instrument);
+  }
+
+  @Override
+  public List<Instrument> getAll() {
+    return instrumentMap.values().stream()
+        .map(PriorityQueue::peek)
+        .collect(Collectors.toList());
   }
 }

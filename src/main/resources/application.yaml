@@ -1,2 +1,2 @@
 consumer:
-  taskTimeOut: 10
+  taskTimeOut: 1000

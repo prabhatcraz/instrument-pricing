@@ -2,6 +2,8 @@ package com.prabhat.instrument.price.instrument.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.prabhat.instrument.price.instrument.broker.ConsumerMessage;
+import com.prabhat.instrument.price.instrument.broker.MessageBroker;
 import com.prabhat.instrument.price.instrument.producer.ProducerInstrument;
 import com.prabhat.instrument.price.instrument.storage.InMemoryInstrumentPriceStorage;
 import org.junit.Test;
@@ -27,7 +29,7 @@ public class ConsumerTest {
         final ConsumerConfig consumerConfig = new ConsumerConfig();
         consumerConfig.setTaskTimeOut(5);
         // WHEN
-        final Consumer consumer = new Consumer(consumerConfig, new ObjectMapper(), new InMemoryInstrumentPriceStorage());
+        final Consumer consumer = new Consumer(consumerConfig, new ObjectMapper(), new InMemoryInstrumentPriceStorage(), new MessageBroker());
         long now = System.currentTimeMillis();
         consumer.consumeData(ConsumerMessage.builder()
                 .folderPath(tempDirWithPrefix.toString())
@@ -60,7 +62,7 @@ public class ConsumerTest {
         final ConsumerConfig consumerConfig = new ConsumerConfig();
         consumerConfig.setTaskTimeOut(5);
         final InMemoryInstrumentPriceStorage storage = new InMemoryInstrumentPriceStorage();
-        final Consumer consumer = new Consumer(consumerConfig, new ObjectMapper(), storage);
+        final Consumer consumer = new Consumer(consumerConfig, new ObjectMapper(), storage, new MessageBroker());
 
         // WHEN
         consumer.consumeDataTask(ConsumerMessage.builder()

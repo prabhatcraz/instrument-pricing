@@ -1,4 +1,4 @@
-package com.prabhat.instrument.price.instrument.consumer;
+package com.prabhat.instrument.price.instrument.broker;
 
 import lombok.Builder;
 import lombok.Data;
