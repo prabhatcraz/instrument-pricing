@@ -10,7 +10,7 @@ In this solution, I have assumed that the producer will put a message in a messa
  ## Design
  Please check out the `intractions.puml`  or (a plant uml plugin would be required) `interactions.png` diagram for easy understanding of how different components are interacting. 
  
- ![interactions][./interactions.png]
+ ![interactions](./interactions.png)
  ## Things not done
  - clean up of temporary directory created by producer
  - Error handling on end points to return meaningful messages.
