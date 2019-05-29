@@ -1,4 +1,4 @@
-package com.prabhat.instrument.price.instrument.endpoint;
+package com.prabhat.instrument.price.instrument.consumer;
 
 import com.prabhat.instrument.price.instrument.storage.Instrument;
 import com.prabhat.instrument.price.instrument.storage.InstrumentPriceStorage;

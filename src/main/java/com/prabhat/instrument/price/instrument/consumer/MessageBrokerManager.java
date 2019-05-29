@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class MessageBrokerManager {
   private final MessageBroker messageBroker;
-  private final Consumer consumer;
+  private final Ingester ingester;
 
   @Scheduled(fixedDelay = 50)
   public void checkMessage() {
@@ -20,7 +20,7 @@ public class MessageBrokerManager {
       final ConsumerMessage message = messageBroker.get();
       if(message != null) {
         log.info("message received, consuming now.");
-        consumer.consumeWithTimeout(message);
+        ingester.consumeWithTimeout(message);
       }
     } catch (Exception e) {
       log.error("Problem retrieving/consuming message {}", e.getMessage());

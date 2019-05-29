@@ -1,5 +1,6 @@
-package com.prabhat.instrument.price.instrument.endpoint;
+package com.prabhat.instrument.price.instrument.endpoints;
 
+import com.prabhat.instrument.price.instrument.consumer.InstrumentPriceService;
 import com.prabhat.instrument.price.instrument.storage.Instrument;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

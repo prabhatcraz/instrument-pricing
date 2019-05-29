@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import static org.apache.naming.SelectorContext.prefix;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ConsumerTest {
+public class IngesterTest {
     @Mock
     private InstrumentDataProcessor instrumentDataProcessor;
     @Test
@@ -24,9 +24,9 @@ public class ConsumerTest {
         consumerConfig.setTaskTimeOut(5);
 
         // WHEN
-        final Consumer consumer = new Consumer(consumerConfig, instrumentDataProcessor);
+        final Ingester ingester = new Ingester(consumerConfig, instrumentDataProcessor);
         long now = System.currentTimeMillis();
-        consumer.consumeWithTimeout(ConsumerMessage.builder()
+        ingester.consumeWithTimeout(ConsumerMessage.builder()
                 .folderPath(tempDirWithPrefix.toString())
                 .totalFiles(100)
                 .build());

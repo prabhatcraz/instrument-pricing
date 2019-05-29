@@ -5,8 +5,14 @@ Tracks price of instrument
 In this solution, I have assumed that the producer will put a message in a message-broker (say SQS). The message would 
  contain the number of records that are supposed to be produced so that the consumer knows when to stop.
  
+ To prevent a consumer from waiting infinitely, there is a timeout for each thread. Value of timeout is configurable in `application.properties` file.
  
- ## THings not done
+ ## Design
+ Please check out the `intractions.puml`  or (a plant uml plugin would be required) `interactions.png` diagram for easy understanding of how different components are interacting. 
+ 
+ ![interactions][./interactions.png]
+ ## Things not done
+ - clean up of temporary directory created by producer
  - Error handling on end points to return meaningful messages.
  - Logging is not configured
  

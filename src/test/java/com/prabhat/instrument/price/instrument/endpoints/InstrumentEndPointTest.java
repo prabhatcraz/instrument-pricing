@@ -1,6 +1,7 @@
-package com.prabhat.instrument.price.instrument.endpoint;
+package com.prabhat.instrument.price.instrument.endpoints;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.prabhat.instrument.price.instrument.consumer.InstrumentPriceService;
 import com.prabhat.instrument.price.instrument.storage.Instrument;
 import org.junit.Test;
 import org.junit.runner.RunWith;

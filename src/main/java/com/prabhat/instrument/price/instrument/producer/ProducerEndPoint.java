@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ProducerEndPoint {
     private final ProducerService producerService;
     /**
-     * Produces a bunch of instruments and puts a message in the queue for consumer to consume.
+     * Produces a bunch of random instruments and puts a message in the queue for consumer to consume.
      */
     @PostMapping("/produce")
     public void startProducing() throws IOException, InterruptedException {

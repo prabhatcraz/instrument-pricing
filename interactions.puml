@@ -1,0 +1,17 @@
+@startuml
+
+
+component MessageBroker as m
+component Ingester as i
+component Producer as p
+component Storage as s
+component httpServer as h
+package files as f
+i --> m : get message
+p --> m : put message
+p --> f: generate data
+i --> f: read data
+h --> s: get instrument data
+i --> s : Store instrument data
+client --> h: Get instrument data
+@enduml
