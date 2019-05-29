@@ -1,5 +1,7 @@
 package com.prabhat.instrument.price.instrument.storage;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  * Stores prices of @{@link Instrument}s in a @{@link ConcurrentHashMap} of @{@link PriorityQueue}. The priority is
  * decided by the timestamp of the price provided by the producer.
  */
+@Component
 public class InMemoryInstrumentPriceStorage implements InstrumentPriceStorage {
   // We need the storage of prices per instrument concurrent and hence usage of a @PriorityBlockingQueue
   // whereas the map of instruments and prices could be a normal @HashMap.
