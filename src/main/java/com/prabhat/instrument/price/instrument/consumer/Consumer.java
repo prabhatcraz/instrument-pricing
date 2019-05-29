@@ -19,7 +19,7 @@ public class Consumer {
 
 
     public void consumeWithTimeout(final ConsumerMessage consumerMessage) {
-        final ExecutorService executor = Executors.newCachedThreadPool();
+        final ExecutorService executor = Executors.newFixedThreadPool(1);
         executor.submit(() -> {
             try {
                 log.info("trying to consume");

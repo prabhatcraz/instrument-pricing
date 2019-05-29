@@ -13,13 +13,16 @@ import java.util.List;
 public class InstrumentEndPoint {
     private final InstrumentPriceService instrumentPriceService;
 
+    /**
+     * Return an instrument with its latest price
+     */
     @GetMapping("instrument/{instrumentId}")
     public Instrument getInstrument(@PathVariable(value = "instrumentId") final String instrumentId) {
         return instrumentPriceService.getInstrument(instrumentId);
     }
 
     /**
-     * Only for demo purposes
+     * Only for demo purposes, returns all the instrument ids stored in memory.
      */
     @GetMapping("/instruments")
     public List<String> getAllInstruments() {
