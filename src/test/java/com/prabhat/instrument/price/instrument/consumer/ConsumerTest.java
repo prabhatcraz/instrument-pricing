@@ -41,7 +41,7 @@ public class ConsumerTest {
     }
 
     @Test
-    public void shouldSuccessFullyConsumeDataFromFile() throws IOException {
+    public void shouldSuccessFullyConsumeDataFromFile() throws IOException, InterruptedException {
         // GIVEN
         final Path tempDirWithPrefix = Files.createTempDirectory(prefix);
         final ObjectMapper objectMapper = new ObjectMapper();

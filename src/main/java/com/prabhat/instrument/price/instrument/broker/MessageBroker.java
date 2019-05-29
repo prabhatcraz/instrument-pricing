@@ -2,20 +2,24 @@ package com.prabhat.instrument.price.instrument.broker;
 
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * A very simple implementation of a message broker to communicate start of producing data between producer and the consumer.
+ */
 @Component
 public class MessageBroker {
-    private final BlockingQueue<ConsumerMessage> queue = new LinkedBlockingQueue<>(10);
+    /**
+     * Although there is only one thread of consumer right now, we can easily create multiple consumers.
+     */
+    private final ConcurrentLinkedQueue<ConsumerMessage> queue = new ConcurrentLinkedQueue<>();
 
-    public void put(final ConsumerMessage consumerMessage) throws InterruptedException {
-        queue.put(consumerMessage);
+    public void put(final ConsumerMessage consumerMessage) {
+        queue.add(consumerMessage);
     }
 
-    public synchronized ConsumerMessage get() throws InterruptedException {
+    public synchronized ConsumerMessage get() {
         // TODO: Put the timeout in a config file.
-        return queue.poll(10, TimeUnit.SECONDS);
+        return queue.poll();
     }
 }

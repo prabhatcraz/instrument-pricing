@@ -10,10 +10,10 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-public class PriceEndPoint {
+public class InstrumentEndPoint {
     private final InstrumentPriceService instrumentPriceService;
 
-    @GetMapping("/{instrumentId}/price")
+    @GetMapping("instrument/{instrumentId}")
     public Instrument getInstrument(@PathVariable(value = "instrumentId") final String instrumentId) {
         return instrumentPriceService.getInstrument(instrumentId);
     }

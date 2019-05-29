@@ -36,7 +36,7 @@ public class Consumer {
         executor.submit(() -> {
             try {
                 consumeDataTask(consumerMessage);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e.getMessage(), e.getCause());
             }
@@ -68,12 +68,17 @@ public class Consumer {
      * For real world scenario - We can realize this as a message stored in a message broker - say SQS. The message would
      * contain the destination information. For e.g. Producer produces data in a S3 bucket.
      */
-    public void consumeDataTask(final ConsumerMessage consumerMessage) throws IOException {
+    public void consumeDataTask(final ConsumerMessage consumerMessage) throws IOException, InterruptedException {
+        // This sleep is required because consumer is too fast to start reading the
+        Thread.sleep(100);
+
+        log.info("Consumer task started {}", consumerMessage.toString());
         final File folder = new File(consumerMessage.getFolderPath());
         final Map<String, Boolean> filesDone = new HashMap<>();
 
         int filesCompleted = 0;
         final List<Instrument> consumerMessageList = new ArrayList<>();
+
         while (filesCompleted < consumerMessage.getTotalFiles()) {
             final File[] files = folder.listFiles();
             log.info("files  " + files.length);
@@ -106,7 +111,6 @@ public class Consumer {
     @Scheduled(fixedDelay = 50)
     public void checkMessage() {
         try {
-            log.info("fetching message.");
             final ConsumerMessage message = messageBroker.get();
             if(message != null) {
                 log.info("message received, consuming now.");
