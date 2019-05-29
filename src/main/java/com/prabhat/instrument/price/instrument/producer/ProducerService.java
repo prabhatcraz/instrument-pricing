@@ -23,8 +23,15 @@ import static org.apache.naming.SelectorContext.prefix;
 @AllArgsConstructor
 @Slf4j
 public class ProducerService {
+  static final List<String> instrumentIds = new ArrayList<>();
+  static {
+    // List of instruments whose data would be produced.
+    for(int i=0; i<100; i++) {
+      instrumentIds.add(UUID.randomUUID().toString());
+    }
+  }
+
   private final MessageBroker messageBroker;
-  private final List<ProducerInstrument> producedInstruments = new ArrayList<>();
 
   /**
    * Produce a ramdom number of instruments and puts a message in the broker.
@@ -44,17 +51,15 @@ public class ProducerService {
         .build());
 
 
-    final List<String> ids = new ArrayList<>(numberOdInstrumentsToProduce);
-
-    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
     for (int i = 0; i < numberOdInstrumentsToProduce; i++) {
-      ids.add(i, UUID.randomUUID().toString());
-      objectMapper.writeValue(new File(String.format("%s/%s.json", tempDirWithPrefix.toString(), ids.get(i))),
-          ProducerInstrument.builder()
-              .asOf(System.currentTimeMillis())
-              .id(ids.get(i))
-              .price(random.nextFloat())
-              .build());
+      final ProducerInstrument producerInstrument = ProducerInstrument.builder()
+          .asOf(System.currentTimeMillis())
+          .id(instrumentIds.get(i))
+          .price(random.nextFloat())
+          .build();
+      log.info("Instrument produced - id: {}, price: {}, asOf: {}", producerInstrument.getId(), producerInstrument.getPrice(), producerInstrument.getAsOf());
+      objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+      objectMapper.writeValue(new File(String.format("%s/%s.json", tempDirWithPrefix.toString(), instrumentIds.get(i))), producerInstrument);
     }
   }
 }
