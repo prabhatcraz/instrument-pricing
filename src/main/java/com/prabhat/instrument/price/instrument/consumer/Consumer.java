@@ -16,9 +16,10 @@ import java.util.concurrent.TimeUnit;
 public class Consumer {
     private final ConsumerConfig consumerConfig;
     private final InstrumentDataProcessor instrumentDataProcessor;
-    private final ExecutorService executor = Executors.newCachedThreadPool();
+
 
     public void consumeWithTimeout(final ConsumerMessage consumerMessage) {
+        final ExecutorService executor = Executors.newCachedThreadPool();
         executor.submit(() -> {
             try {
                 log.info("trying to consume");
