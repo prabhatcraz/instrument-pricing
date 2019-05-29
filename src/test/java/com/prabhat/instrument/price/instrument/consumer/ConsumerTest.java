@@ -37,7 +37,6 @@ public class ConsumerTest {
                 .build());
 
         // THEN
-        System.out.println(System.currentTimeMillis() - now);
         assert (System.currentTimeMillis() - now) < 6000;
     }
 

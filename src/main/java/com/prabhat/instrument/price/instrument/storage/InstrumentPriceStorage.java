@@ -8,5 +8,8 @@ public interface InstrumentPriceStorage {
 
   void addPrice(Instrument instrumentPrice);
 
-  List<Instrument> getAll();
+  /**
+   * Only for demo purposes
+   */
+  List<String> getAll();
 }

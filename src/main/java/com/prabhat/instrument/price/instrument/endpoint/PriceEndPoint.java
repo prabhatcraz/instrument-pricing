@@ -20,10 +20,9 @@ public class PriceEndPoint {
 
     /**
      * Only for demo purposes
-     * @return
      */
     @GetMapping("/instruments")
-    public List<Instrument> getAllInstruments() {
+    public List<String> getAllInstruments() {
         return instrumentPriceService.getAll();
     }
 }

@@ -29,11 +29,9 @@ public class InMemoryInstrumentPriceStorageTest {
             newInstruments.add(instrument.toString());
         }
         long then1 = System.currentTimeMillis();
-        System.out.println("Total time: " + (then1 - now));
 
         newInstruments = instrumentList.stream().map(Instrument::toString).collect(Collectors.toList());
         long then2 = System.currentTimeMillis();
-        System.out.println("Total time: " + (then2 - then1));
 
     }
 }

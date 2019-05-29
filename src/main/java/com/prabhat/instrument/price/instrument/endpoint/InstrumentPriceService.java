@@ -16,7 +16,10 @@ public class InstrumentPriceService {
         return instrumentPriceStorage.get(id);
     }
 
-    public List<Instrument> getAll() {
+    /**
+     * Only for demo purposes
+     */
+    public List<String> getAll() {
         return instrumentPriceStorage.getAll();
     }
 }

@@ -30,20 +30,24 @@ public class Consumer {
     private final InstrumentPriceStorage instrumentPriceStorage;
     private final MessageBroker messageBroker;
 
+    private final ExecutorService executor = Executors.newFixedThreadPool(10);
+
     public void consumeData(final ConsumerMessage consumerMessage) {
-        final ExecutorService executor = Executors.newFixedThreadPool(1);
         executor.submit(() -> {
             try {
                 consumeDataTask(consumerMessage);
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e.getMessage(), e.getCause());
             }
         });
 
         executor.shutdown();
         try {
+            log.info(String.format("Should kill thread in %s seconds", consumerConfig.getTaskTimeOut()));
             if (!executor.awaitTermination(consumerConfig.getTaskTimeOut(), TimeUnit.SECONDS)) {
                 executor.shutdownNow();
+                log.info("Killed the thread after waiting.");
             }
         } catch (InterruptedException ex) {
             executor.shutdownNow();
@@ -72,7 +76,7 @@ public class Consumer {
         final List<Instrument> consumerMessageList = new ArrayList<>();
         while (filesCompleted < consumerMessage.getTotalFiles()) {
             final File[] files = folder.listFiles();
-            assert files != null;
+            log.info("files  " + files.length);
 
             for (final File file : files) {
                 if (filesDone.get(file.getName()) != Boolean.TRUE) {
@@ -82,11 +86,11 @@ public class Consumer {
                 }
             }
 
-            System.out.println("files completed " + filesCompleted);
+            log.info("files completed " + filesCompleted);
             // At this point, we are sure that the producer has completed the batch.
             filesCompleted += files.length;
         }
-        System.out.println("All data consumed");
+        log.info("All data consumed  " + filesCompleted);
 
         consumerMessageList.forEach(instrumentPriceStorage::addPrice);
     }
@@ -102,11 +106,11 @@ public class Consumer {
     @Scheduled(fixedDelay = 50)
     public void checkMessage() {
         try {
-            System.out.println("fetching message.");
+            log.info("fetching message.");
             final ConsumerMessage message = messageBroker.get();
             if(message != null) {
-                System.out.println("message received, consuming now.");
-                consumeData(message);
+                log.info("message received, consuming now.");
+                this.consumeData(message);
             }
 
         } catch (Exception e) {
